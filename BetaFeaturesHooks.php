@@ -186,9 +186,12 @@ class BetaFeaturesHooks {
 			'section' => 'betafeatures',
 		);
 
+		$autoenroll_counts = self::getUserCounts( array( 'auto-enroll' ) );
+
 		$prefs['betafeatures-auto-enroll'] = array(
-			'class' => 'NewHTMLCheckField',
+			'class' => 'HTMLAutoEnrollField',
 			'label-message' => 'betafeatures-auto-enroll',
+			'user-count' => $autoenroll_counts['auto-enroll'],
 			'section' => 'betafeatures',
 		);
 
@@ -199,7 +202,6 @@ class BetaFeaturesHooks {
 		);
 
 		$counts = self::getUserCounts( array_keys( $betaPrefs ) );
-
 		// Set up dependency hooks array
 		// This complex structure brought to you by Per-Wiki Configuration,
 		// coming soon to a wiki very near you.
