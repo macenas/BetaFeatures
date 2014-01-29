@@ -186,12 +186,12 @@ class BetaFeaturesHooks {
 			'section' => 'betafeatures',
 		);
 
-		$autoenroll_counts = self::getUserCounts( array( 'auto-enroll' ) );
+		$counts = self::getUserCounts( array_keys( $betaPrefs ) );
 
 		$prefs['betafeatures-auto-enroll'] = array(
 			'class' => 'HTMLAutoEnrollField',
 			'label-message' => 'betafeatures-auto-enroll',
-			'user-count' => $autoenroll_counts['auto-enroll'],
+			'user-count' => $counts['betafeatures-auto-enroll'],
 			'section' => 'betafeatures',
 		);
 
@@ -201,7 +201,6 @@ class BetaFeaturesHooks {
 			'section' => 'betafeatures',
 		);
 
-		$counts = self::getUserCounts( array_keys( $betaPrefs ) );
 		// Set up dependency hooks array
 		// This complex structure brought to you by Per-Wiki Configuration,
 		// coming soon to a wiki very near you.
@@ -228,6 +227,10 @@ class BetaFeaturesHooks {
 					// Skip this preference!
 					continue;
 				}
+			}
+
+			if ( $key === 'betafeatures-auto-enroll' ) {
+				continue;
 			}
 
 			$opt = array(
@@ -369,6 +372,23 @@ class BetaFeaturesHooks {
 	static function getSchemaUpdates( $updater ) {
 		$updater->addExtensionTable( 'betafeatures_user_counts',
 			__DIR__ . '/sql/create_counts.sql' );
+		return true;
+	}
+
+	// Add a beta preference to gate the feature
+	public static function getBetaPreferences( $user, &$prefs ) {
+		global $wgExtensionAssetsPath;
+
+		$dir = RequestContext::getMain()->getLanguage()->getDir();
+
+		$prefs['betafeatures-auto-enroll'] = array(
+			'label-message' => 'prefs-betafeatures',
+			'desc-message' => 'betafeatures-desc',
+			'info-link' => '#',
+			'discussion-link' => '#',
+			'screenshot' => "$wgExtensionAssetsPath/MultimediaViewer/viewer-$dir.svg",
+		);
+
 		return true;
 	}
 
