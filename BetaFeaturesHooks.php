@@ -186,9 +186,12 @@ class BetaFeaturesHooks {
 			'section' => 'betafeatures',
 		);
 
+		$counts = self::getUserCounts( array_keys( $betaPrefs ) );
+
 		$prefs['betafeatures-auto-enroll'] = array(
-			'class' => 'NewHTMLCheckField',
+			'class' => 'HTMLFeatureField',
 			'label-message' => 'betafeatures-auto-enroll',
+			'user-count' => $counts['betafeatures-auto-enroll'],
 			'section' => 'betafeatures',
 		);
 
@@ -197,8 +200,6 @@ class BetaFeaturesHooks {
 			'class' => 'HTMLHorizontalRuleField',
 			'section' => 'betafeatures',
 		);
-
-		$counts = self::getUserCounts( array_keys( $betaPrefs ) );
 
 		// Set up dependency hooks array
 		// This complex structure brought to you by Per-Wiki Configuration,
@@ -226,6 +227,12 @@ class BetaFeaturesHooks {
 					// Skip this preference!
 					continue;
 				}
+			}
+
+			// Skip this feature because it has already been shown before. Without this,
+			// the HTML feature declared above would be overwrited.
+			if ( $key === 'betafeatures-auto-enroll' ) {
+				continue;
 			}
 
 			$opt = array(
@@ -372,6 +379,16 @@ class BetaFeaturesHooks {
 
 	public static function onExtensionTypes( array &$extTypes ) {
 		$extTypes['betafeatures'] = wfMessage( 'betafeatures-extension-type' )->escaped();
+		return true;
+	}
+
+	// Add a beta preference to gate the auto-enroll feature
+	public static function getBetaPreferences( $user, &$prefs ) {
+		global $wgExtensionAssetsPath;
+
+		$dir = RequestContext::getMain()->getLanguage()->getDir();
+		$prefs['betafeatures-auto-enroll'] = array();
+
 		return true;
 	}
 

@@ -83,6 +83,10 @@ table.mw-htmlform-container {
 	margin-bottom: 0.5em;
 }
 
+.mw-ui-autoenroll-header {
+	width: 100%;
+}
+
 .mw-ui-feature-meta,
 .mw-ui-feature-screenshot-contain,
 .mw-ui-feature-title-contain,
@@ -103,6 +107,10 @@ table.mw-htmlform-container {
 
 .mw-ui-feature-field {
 	margin-bottom: 68px;
+	position: relative;
+}
+
+.mw-ui-autoenroll-field {
 	position: relative;
 }
 
